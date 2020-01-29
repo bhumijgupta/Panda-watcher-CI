@@ -1,6 +1,7 @@
 name: panda-portfolio CI
 on:
   push:
+    # Do not run if there are only changes to **.md file
     paths-ignore:
       - "**.md"
 
@@ -18,6 +19,7 @@ jobs:
         run: |
           npx panda-portfolio config.json
       - name: Commit changes
+        # Check if git tree is dirty, then commit and push
         run: |
           if output=$(git status --porcelain) && [ -z "$output" ]; then
               echo "No changes to commit"
