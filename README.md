@@ -24,9 +24,12 @@ Panda watcher CI is a complemetary script to [Panda-portfolio](www.npmjs.com/pac
 
 2. Go to repo where panda-watcher-CI is configured. Add PAT to repository secret.
     1. Go to Settings > Add new secrets
+        ![Step 1](assets/pic1.png)
     2. Click on Add a new secret
     3. Give the title `PAT_TOKEN`, and paste the token from Step 2 in value
-    4. Click on Add
+        ![Step 2](assets/pic2.png)
+    4. Click on Add Secret
+        ![Step 3](assets/pic3.png)
 
 3. Copy [`main.yml`](main.yml) to `.github/workflows` in the target repo.
 
