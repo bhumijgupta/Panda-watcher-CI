@@ -1,0 +1,35 @@
+name: panda-portfolio CI
+on:
+  push:
+    paths-ignore:
+      - "**.md"
+
+jobs:
+  build:
+    name: Build Site
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 10.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10.x
+      - name: Run panda-portfolio
+        run: |
+          npx panda-portfolio config.json
+      - name: Commit changes
+        run: |
+          if output=$(git status --porcelain) && [ -z "$output" ]; then
+              echo "No changes to commit"
+          else 
+              git add .
+              git config --global user.name 'panda-portfolio-ci'
+              git config --global user.email 'panda-portfolio-ci@users.noreply.github.com'
+              git commit -m "[CI bot] Sync ${{github.event.head_commit.message}}"
+              git push -u origin ${GITHUB_REF##*/}
+              echo "Requesting page rebuild"
+              curl -X POST \
+                --header 'Accept: application/vnd.github.mister-fantastic-preview+json' \
+                -u "${{github.event.repository.owner.name}}":"${{secrets.PAT_TOKEN}}" \
+                'https://api.github.com/repos/${{github.repository}}/pages/builds'
+          fi
